@@ -1,38 +1,32 @@
-name: Deploy React App
-
+name: Deploy to GitHub Pages
+ 
 on:
   push:
     branches:
-      - main  # Trigger the workflow on push to the main branch
-
+      - main
+ 
 jobs:
-  build-and-deploy:
-    runs-on: windows-latest
-
+  deploy:
+    runs-on: self-hosted
+ 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v2
-
-    - name: Set up Node.js
+ 
+    - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
-
-    - name: Set execution policy to bypass
-      run: Set-ExecutionPolicy Bypass -Scope Process -Force
-      shell: pwsh
-
+        node-version: '18.14'
+ 
     - name: Install dependencies
       run: npm install
-      working-directory: ./
-
-    - name: Build the React app
+ 
+    - name: Build website
       run: npm run build
-      working-directory: ./
-
+ 
     - name: Deploy to GitHub Pages
-      if: github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./build  # Adjust this path if necessary
+        github_token: ${{ secrets.ACCESS_TOKEN }}
+        publish_dir: ./build
+        publish_branch: gh-pages
