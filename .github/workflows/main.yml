@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: self-hosted
+    runs-on: windows-latest
 
     steps:
     - name: Checkout code
@@ -18,15 +18,21 @@ jobs:
       with:
         node-version: '18.14'
 
+    - name: Set execution policy to bypass
+      run: Set-ExecutionPolicy Bypass -Scope Process -Force
+      shell: pwsh
+
     - name: Install dependencies
       run: npm install
+      shell: pwsh
 
     - name: Build the React app
       run: npm run build
+      shell: pwsh
 
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v3
       with:
-        github_token: ${{ secrets.ACCESS_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./build
