@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '18.14'
+        node-version: '14'
 
     - name: Set execution policy to bypass
       run: Set-ExecutionPolicy Bypass -Scope Process -Force
@@ -24,15 +24,15 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      shell: pwsh
-
+      working-directory: ./
+      
     - name: Build the React app
       run: npm run build
-      shell: pwsh
+      working-directory: ./
 
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./build
+        publish_dir: ./globle/build
